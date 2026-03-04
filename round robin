@@ -1,0 +1,57 @@
+#include <stdio.h>
+
+int main() {
+    int n, i, ts, time = 0, done;
+    int bt[10], rem[10], wt[10], tat[10];
+    float total_wt = 0, total_tat = 0;
+
+    // Input
+    printf("Number of Processes: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("Enter BT for P%d: ", i+1);
+        scanf("%d", &bt[i]);
+        rem[i] = bt[i];        // rem = remaining burst time
+        wt[i]  = 0;            // initialize waiting time
+    }
+
+    printf("Enter Time Slice: ");
+    scanf("%d", &ts);
+
+    // Round Robin Loop
+    do {
+        done = 1;              // assume all finished
+        for (i = 0; i < n; i++) {
+            if (rem[i] > 0) {
+                done = 0;      // not finished yet
+
+                if (rem[i] > ts) {
+                    time    += ts;
+                    rem[i]  -= ts;       // run for one time slice
+                } 
+
+                else {
+                    time    += rem[i];
+                    rem[i]   = 0;        // process finishes
+                    wt[i]    = time - bt[i];   // WT = finish time - burst time
+                }
+            }
+        }
+    } while (!done);           // keep going until all done
+
+    // Output
+    printf("\nP\tBT\tWT\tTAT\n");
+    printf("------------------------\n");
+    for (i = 0; i < n; i++) {
+        tat[i]    = bt[i] + wt[i];
+        total_wt  += wt[i];
+        total_tat += tat[i];
+        printf("P%d\t%d\t%d\t%d\n", i+1, bt[i], wt[i], tat[i]);
+    }
+    printf("------------------------\n");
+    printf("Average WT  = %.2f\n", total_wt / n);
+    printf("Average TAT = %.2f\n", total_tat / n);
+
+    return 0;
+}
