@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+int w[10], x[10], n, target;
+
+
+void printSubset() {
+    printf("{ ");
+    for (int i = 0; i < n; i++) {
+        if (x[i] == 1) {
+            printf("%d ", w[i]);
+        }
+    }
+    printf("}\n");
+}
+
+
+void sumOfSubsets(int k, int sum, int remaining) {
+    x[k] = 1;
+
+    if (sum + w[k] == target) {
+        printSubset();
+    }
+    else if (sum + w[k] + w[k+1] <= target) {
+        sumOfSubsets(k + 1, sum + w[k], remaining - w[k]);
+    }
+
+    if (sum + remaining - w[k] >= target && sum + w[k+1] <= target) {
+        x[k] = 0;
+        sumOfSubsets(k + 1, sum, remaining - w[k]);
+    }
+}
+
+int main() {
+    int total = 0;
+
+    printf("Enter number of elements: ");
+    scanf("%d", &n);
+
+    printf("Enter elements:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &w[i]);
+        total += w[i];
+    }
+
+    printf("Enter target sum: ");
+    scanf("%d", &target);
+
+    
+    for (int i = 0; i < n; i++) {
+        x[i] = 0;
+    }
+
+    sumOfSubsets(0, 0, total);
+
+    return 0;
+}
