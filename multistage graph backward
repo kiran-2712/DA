@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+
+int main() {
+    int n;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    int cost[n][n], dist[n], path[n];
+
+    printf("Enter cost adjacency matrix:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &cost[i][j]);
+        }
+    }
+
+   
+    for (int i = 0; i < n; i++) {
+        dist[i] = INF;
+    }
+
+    dist[n - 1] = 0; // destination node
+
+ 
+    for (int i = n - 2; i >= 0; i--) {
+        for (int j = i + 1; j < n; j++) {
+            if (cost[i][j] != 0 && dist[i] > cost[i][j] + dist[j]) {
+                dist[i] = cost[i][j] + dist[j];
+                path[i] = j;
+            }
+        }
+    }
+
+    
+    printf("Minimum cost: %d\n", dist[0]);
+
+   
+    int temp = 0;
+    printf("Path: %d ", temp);
+
+    while (temp != n - 1) {
+        temp = path[temp];
+        printf("-> %d ", temp);
+    }
+
+    return 0;
+}
