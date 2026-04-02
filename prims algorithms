@@ -1,0 +1,27 @@
+def prim(graph):
+    V = len(graph)
+    selected = [False] * V
+    selected[0] = True  # start from vertex 0
+    mst_edges = []
+    total_weight = 0
+
+    for _ in range(V - 1):
+        min_edge = float('inf')
+        u = v = -1
+
+        for i in range(V):
+            if selected[i]:
+                for j in range(V):
+                    if not selected[j] and graph[i][j] != 0:
+                        if graph[i][j] < min_edge:
+                            min_edge = graph[i][j]
+                            u, v = i, j
+
+        selected[v] = True
+        mst_edges.append((u, v, graph[u][v]))
+        total_weight += graph[u][v]
+
+    print("Edges in MST:")
+    for u, v, w in mst_edges:
+        print(f"{u} - {v} : {w}")
+    print("Total weight of MST:", total_weight)
