@@ -1,0 +1,45 @@
+#include <stdio.h>
+#define INF 999
+
+int main() {
+    int n, i, j;
+    
+    printf("Enter the number of vertices: ");
+    scanf("%d", &n);
+    
+    int cost[n][n];
+    int dist[n];      // shortest distance from source to vertex i
+    int path[n];      // store the next vertex in the path
+
+    printf("Enter cost adjacency matrix (use 999 for no edge):\n");
+    for(i = 0; i < n; i++)
+        for(j = 0; j < n; j++)
+            scanf("%d", &cost[i][j]);
+
+    dist[n-1] = 0;  // distance from last vertex to itself is 0
+    path[n-1] = n-1;
+
+    // Forward DP: compute shortest distance from i to destination
+    for(i = n-2; i >= 0; i--) {
+        dist[i] = INF;
+        for(j = i+1; j < n; j++) {
+            if(cost[i][j] != INF && dist[i] > cost[i][j] + dist[j]) {
+                dist[i] = cost[i][j] + dist[j];
+                path[i] = j;
+            }
+        }
+    }
+
+    printf("\nShortest distance from source (0) to destination (%d): %d\n", n-1, dist[0]);
+    
+    // Print path
+    printf("Path: %d", 0);
+    i = 0;
+    while(i != n-1) {
+        i = path[i];
+        printf(" -> %d", i);
+    }
+    printf("\n");
+
+    return 0;
+}
