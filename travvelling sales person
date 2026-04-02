@@ -1,0 +1,38 @@
+#include <stdio.h>
+#define N 4  // Number of cities
+
+int tsp(int city, int visited, int cost[N][N], int memo[N][1 << N]) {
+    if (visited == (1 << N) - 1) {
+        return cost[city][0]; // Return to start
+    }
+    if (memo[city][visited] != -1) {
+        return memo[city][visited];
+    }
+
+    int ans = 1e9; // Large number
+    for (int next = 0; next < N; next++) {
+        if (!(visited & (1 << next))) { // If next city not visited
+            int newAns = cost[city][next] + tsp(next, visited | (1 << next), cost, memo);
+            if (newAns < ans) ans = newAns;
+        }
+    }
+    return memo[city][visited] = ans;
+}
+
+int main() {
+    int cost[N][N] = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+
+    int memo[N][1 << N];
+    for (int i = 0; i < N; i++)
+        for (int j = 0; j < (1 << N); j++)
+            memo[i][j] = -1;
+
+    int result = tsp(0, 1, cost, memo); // Start from city 0
+    printf("Minimum cost of TSP: %d\n", result);
+    return 0;
+}
